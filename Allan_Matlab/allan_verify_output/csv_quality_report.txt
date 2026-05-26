@@ -1,0 +1,41 @@
+========== CSV 数据质量检查报告 ==========
+日期: 2026-05-24 22:28:38
+输入文件: D:\EG_FPGA_Project\Project\Allan_Matlab\ocxo_sim_time_error.csv
+数据身份: theoretical_simulation
+
+--- 1. 文件与字段检查 ---
+文件存在: PASS
+  列 sample_index    : PASS
+  列 time_s          : PASS
+  列 time_error_s    : PASS
+time_error_s 为实数数值: PASS
+NaN 数量: 0  PASS
+Inf 数量: 0  PASS
+sample_index 连续 (步长=1): PASS
+time_s 单调递增: PASS
+time_s 间隔稳定性 (CV=3.69e-11): PASS
+
+--- 2. 采样参数（自动检测） ---
+tau0 (采样间隔)     : 1.000000e-02 s  (10.000 ms)
+fs   (采样频率)     : 100.000 Hz
+N    (样本数)       : 1000000
+T_total (总时长)    : 9999.990 s  (166.67 min)
+最大可信 tau         : 999.999 s  (T_total / 10)
+
+--- 3. time_error_s 统计 ---
+最小值   : -5.738742e-07 s  (-573.874 ns)
+最大值   : 5.910563e-09 s  (5.911 ns)
+均值     : -3.119596e-07 s  (-311.960 ns)
+标准差   : 2.071965e-07 s  (207.196 ns)
+峰峰值   : 5.797848e-07 s  (579.785 ns)
+首值     : -2.994621e-12 s
+尾值     : -5.738550e-07 s
+
+--- 4. 异常跳变检测 ---
+diff(x) 均值       : -5.738526e-13 s
+diff(x) 标准差     : 5.035225e-12 s
+跳变阈值           : 5.0 sigma
+检测到跳变数       : 0  PASS
+
+--- 5. 总体质量评估 ---
+总体评估: PASS

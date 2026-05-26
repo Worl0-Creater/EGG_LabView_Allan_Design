@@ -1,0 +1,132 @@
+==========================================================================
+  OCXO 测量链路仿真对比报告
+  [THEORETICAL MEASUREMENT CHAIN SIMULATION]
+==========================================================================
+日期: 2026-05-24 23:20:08
+
+--- 1. 输入文件 ---
+input_file           : D:\EG_FPGA_Project\Project\Allan_Matlab\ocxo_sim_time_error.csv
+
+--- 2. 数据身份声明 ---
+input_data_type      : theoretical_simulation
+output_data_type     : measurement_chain_simulation
+is_real_measurement  : false
+NOTE: All output data is THEORETICAL SIMULATION, NOT real OCXO measurement.
+NOTE: This is a THEORETICAL TDC measurement chain for MATLAB/LabVIEW Allan VI validation.
+NOTE: It is NOT real TDC hardware measurement data.
+
+--- 3. 采样参数 ---
+tau0                 : 1.000000e-02 s (10.000 ms)
+N (样本数)           : 1000000
+T_total (总时长)     : 9999.990 s (166.67 min, 2.78 hr)
+去趋势模式           : linear removed (from ideal trend)
+
+--- 4. 测量链路参数 ---
+
+  [50 MHz 粗计数链路]
+    f_ref            : 50 MHz
+    tick             : 2.000e-08 s (20.0 ns)
+    模型             : x_meas = round(x_true / tick) * tick
+
+  [200 MHz 粗计数链路]
+    f_ref            : 200 MHz
+    tick             : 5.000e-09 s (5.0 ns)
+    模型             : x_meas = round(x_true / tick) * tick
+
+  [TDC 高分辨率链路]
+    TDC LSB          : 1.000e-11 s (10.0 ps)
+    TDC jitter RMS   : 5.000e-12 s (5.0 ps)
+    模型             : x_meas = x_true + uniform(-LSB/2,+LSB/2) + N(0,sigma_jitter)
+    理论公式         : sigma_total = sqrt(LSB^2/12 + sigma_jitter^2)
+                     = sqrt(10.0^2/12 + 5.0^2) ps
+                     = 5.774 ps
+
+    设计目标（三级）:
+      推荐   <= 6.0 ps : true
+      激进   <= 3.0 ps : false  (需更优 LSB/jitter 参数)
+      极限   <= 1.5 ps : false  (理论参考)
+
+--- 5. 测量误差统计 ---
+
+  链路                            误差 RMS    误差 Peak-Peak
+  ----                        --------  --------------
+  Ideal                              0               0
+  50 MHz coarse           5.591e-09 s    2.000e-08 s
+  200 MHz coarse          1.413e-09 s    5.000e-09 s
+  TDC high-res            5.770e-12 s    5.282e-11 s
+
+  50 MHz 量化误差 RMS (理论) : tick/sqrt(12) = 5.774e-09 s (5.774 ns)
+  200 MHz 量化误差 RMS (理论): tick/sqrt(12) = 1.443e-09 s (1.443 ns)
+  TDC 总误差 RMS (理论)      : sqrt(LSB^2/12 + sigma^2) = 5.774e-12 s (5.774 ps)
+  TDC 总误差 RMS (仿真)      : 5.770e-12 s (5.770 ps)
+
+  TDC 三级目标检查:
+    推荐 <= 6.0 ps : theoretical RMS 5.774 ps -> true
+    激进 <= 3.0 ps : theoretical RMS 5.774 ps -> false
+    极限 <= 1.5 ps : theoretical RMS 5.774 ps -> false
+
+--- 6. Allan 偏差对比 ---
+
+  有效 tau 点数      : 73
+  tau 范围           : [1.000e-02, 1.000e+03] s
+
+  tau (s)     ADEV ideal    ADEV 50MHz    ADEV 200MHz   ADEV TDC    
+  ------      ----------    ----------    -----------   --------    
+  0.010       4.999e-10     4.290e-08     1.778e-08     1.116e-09   
+  0.100       1.584e-10     7.427e-09     3.144e-09     1.874e-10   
+  1.060       4.991e-11     1.481e-09     6.287e-10     5.079e-11   
+  9.430       1.918e-11     4.067e-10     1.825e-10     1.921e-11   
+  97.130      1.574e-11     9.500e-11     2.982e-11     1.574e-11   
+
+--- 7. 各测量链对 Allan 曲线的影响分析 ---
+
+  [50 MHz 粗计数链路]
+    - 时间分辨率 20 ns 远大于 OCXO 短期时间误差量级 (~ps 到 ~ns)
+    - 量化误差主导短 tau 区间，Allan 曲线在短 tau 端被量化噪声抬高
+    - 无法区分 OCXO 本征噪声与测量系统量化噪声
+    - 结论：不适合高性能 OCXO 短稳表征
+
+  [200 MHz 粗计数链路]
+    - 时间分辨率 5 ns 比 50 MHz 改善 4 倍
+    - 短 tau 区间量化噪声仍然显著
+    - 属于粗时间戳方案，分辨率仍不足以表征高性能 OCXO
+    - 结论：比 50 MHz 有改善，但仍属于粗时间戳方案
+
+  [TDC 高分辨率链路]
+    - 时间分辨率 10.0 ps，远优于粗计数方案
+    - 理论总时间误差 RMS 5.774 ps
+    - 推荐目标 <= 6.0 ps: true | 激进 <= 3.0 ps: false | 极限 <= 1.5 ps: false
+    - Allan 曲线更接近理想曲线，适合 LabVIEW Allan VI 前仿真验证
+    - 能够准确反映 OCXO 本征噪声特性
+    - 结论：测量链路分辨率更合理，适合生成 time_error_s 输入
+
+--- 8. 结论 ---
+
+  1. 50 MHz 粗计数会显著引入量化误差 (仿真 RMS 5.591 ns, 理论 5.774 ns)，
+     不适合高性能 OCXO 短稳表征。
+
+  2. 200 MHz 可以改善粗计数分辨率 (仿真 RMS 1.413 ns, 理论 1.443 ns)，
+     但仍属于粗时间戳方案，分辨率不足。
+
+  3. TDC / 高分辨率理论时间间隔测量链路 (RMS ~5.774 ps)
+     更适合生成 time_error_s 输入，
+     测量链路分辨率与 OCXO 本征噪声匹配。
+
+  4. 当前结果只用于 MATLAB/LabVIEW 前仿真和测量链路合理性说明，
+     不是真实实测数据。
+
+--- 9. 输出文件清单 ---
+
+  measurement_chain_compare_allan.csv   : Allan 对比数据
+  measurement_chain_error_stats.csv     : 各链路误差统计
+  ocxo_sim_time_error_tdc_measured.csv  : TDC 模拟测量结果 (可作为 LabVIEW 输入)
+  measurement_error_compare.png         : 测量误差时域对比
+  allan_compare_measurement_chain.png   : Allan 偏差对比曲线
+  time_error_tdc_vs_ideal.png           : TDC 与理想时间误差对比
+  tdc_chain_sim_report.txt              : 本报告
+
+==========================================================================
+  DISCLAIMER: This is a THEORETICAL MEASUREMENT CHAIN SIMULATION.
+  All data is generated from simulation models, NOT real measurement.
+  Do NOT claim TDC simulation data as real TDC measurement.
+==========================================================================

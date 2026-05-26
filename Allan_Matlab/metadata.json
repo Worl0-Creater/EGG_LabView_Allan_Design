@@ -1,0 +1,50 @@
+{
+  "device_under_test": {
+    "type": "OCXO",
+    "model": "CTI OSC5A2B02",
+    "nominal_frequency_hz": 1.0E+7,
+    "warmup_time_min": 60,
+    "data_source": "simulation"
+  },
+  "reference_source": {
+    "type": "ideal (simulation)",
+    "nominal_frequency_hz": 1.0E+7,
+    "allan_stability": "perfect (no contribution)"
+  },
+  "noise_model": {
+    "h2_white_pm": 2E-29,
+    "h0_white_fm": 5E-21,
+    "h_neg1_flicker_fm": 7.2E-23,
+    "h_neg2_rwfm": 1E-25,
+    "D_drift_per_s": 5.7870370370370377E-15,
+    "generation_method": "time-domain (WFM/RWFM/WPM) + FFT spectral shaping (FFM)"
+  },
+  "measurement_chain": {
+    "method": "time_error_s",
+    "fpga_ref_clock_hz": "N/A (simulation, ideal sampling)",
+    "time_resolution_s": "unlimited (simulation)",
+    "gate_time_s": "N/A",
+    "tdc_lsb_s": "N/A"
+  },
+  "environment": {
+    "temperature_c": "25 (simulation, constant)",
+    "power_supply": "ideal (simulation)",
+    "shielding": "N/A (simulation)",
+    "location": "MATLAB simulation"
+  },
+  "data": {
+    "csv_file": "D:\\EG_FPGA_Project\\Project\\Allan_Matlab\\ocxo_sim_time_error.csv",
+    "format": "sample_index, time_s, time_error_s",
+    "sample_interval_s": 0.01,
+    "sample_count": 1.0E+6,
+    "total_duration_s": 10000,
+    "random_seed": 42
+  },
+  "expected_allan_deviation": {
+    "tau_0p01s": "~5e-10 (White FM dominant)",
+    "tau_1s": "~5e-11 (White FM)",
+    "tau_10s": "~2e-11 (transition to flicker floor)",
+    "tau_100s": "~1.5e-11 (flicker floor + RWFM rising)",
+    "tau_1000s": "~2.8e-11 (RWFM dominant)"
+  }
+}

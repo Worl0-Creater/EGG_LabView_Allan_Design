@@ -1,0 +1,54 @@
+﻿# =========================
+# Windows / editor temp files
+# =========================
+Thumbs.db
+Desktop.ini
+*.tmp
+*.temp
+*.bak
+*.log
+~$*
+.DS_Store
+
+# =========================
+# LabVIEW local/cache files
+# =========================
+*.aliases
+*.lvlps
+*.lock
+CompiledObjectCache/
+LabVIEW Data/
+build/
+Build/
+builds/
+Builds/
+dist/
+output/
+outputs/
+temp/
+cache/
+
+# =========================
+# MATLAB temporary files
+# =========================
+*.asv
+*.m~
+*.mat.tmp
+
+# =========================
+# Python temporary files, if any
+# =========================
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# =========================
+# Large generated result folders
+# 注意：不要全局忽略 *.csv，避免误伤你的测试数据。
+# 如果某些 CSV 太大，建议单独放到 ignored_data/ 里面。
+# =========================
+ignored_data/
+large_data/
+raw_data/
+result_cache/

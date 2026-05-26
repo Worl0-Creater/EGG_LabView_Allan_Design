@@ -1,0 +1,5 @@
+chain_name,resolution_s,jitter_rms_s,error_theory_rms_s,error_rms_s,error_peak_to_peak_s,comment
+ideal,0,0,0,0,0,"ideal x_true, no measurement error"
+50MHz_coarse,2e-08,0,5.77350269189626e-09,5.59050573544952e-09,1.9999997284991e-08,"round quantization at 20 ns tick"
+200MHz_coarse,5e-09,0,1.44337567297406e-09,1.41316138913797e-09,4.99999447997597e-09,"round quantization at 5 ns tick"
+TDC_high_res,1e-11,5e-12,5.77350269189626e-12,5.76979300607333e-12,5.28249467372789e-11,"LSB=10ps, jitter=5ps RMS, uniform+gaussian model"

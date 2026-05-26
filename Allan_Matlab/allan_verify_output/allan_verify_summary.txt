@@ -1,0 +1,44 @@
+========== Allan 偏差验证总结 ==========
+日期: 2026-05-24 22:28:39
+
+--- 数据身份 ---
+data_type            : theoretical_simulation
+is_real_measurement  : false
+purpose              : Allan algorithm and LabVIEW host-software validation
+
+--- 采样参数 ---
+tau0                 : 1.000000e-02 s
+N                    : 1000000
+T_total              : 9999.990 s (166.67 min)
+最大可信 tau          : 999.999 s
+去趋势方式           : linear removed
+
+--- Allan 结果概要 ---
+有效 tau 点数        : 73
+tau 范围             : [1.000e-02, 1.000e+03] s
+ADEV 范围            : [1.534e-11, 4.999e-10]
+ADEV 最小值          : 1.534e-11 @ tau = 3.027e+01 s
+短 tau 端斜率        : -0.50 (预期 -0.5 为 White FM)
+长 tau 端斜率        : +0.64 (预期 +0.5 为 RWFM)
+
+--- 结论 ---
+判定: PASS
+该 CSV 适合作为 MATLAB/LabVIEW 前仿真 Allan 偏差计算的核心输入源。
+
+理由:
+  1. CSV 数据质量检查全部通过
+  2. 有效 tau 点数充足 (73 个)
+  3. 总时长 (10000 s) 满足最大 tau (1000 s) 的 10 倍要求
+  4. Allan 曲线形态符合典型 OCXO 噪声模型预期
+
+--- LabVIEW 上位机对接字段说明 ---
+allan_result.csv 各列可直接被 LabVIEW Read Delimited Spreadsheet 读取：
+  m                 : 平均因子，LabVIEW 端用于与 FPGA 在线结果逐点比对
+  tau_s             : Allan 平均时间 (s)，即 log-log 曲线横轴
+  adev              : Allan 偏差 σ_y(τ)，即 log-log 曲线纵轴
+  avar              : Allan 方差 σ²_y(τ)，供需要方差形式的模块使用
+  sample_count_used : 该 τ 点参与计算的二阶差分对数，用于置信度判断
+
+重要声明:
+  本数据为 theoretical simulation（理论仿真），不是真实 OCXO 实测数据。
+  仅用于验证 Allan 偏差算法流程和 LabVIEW 上位机前仿真。
