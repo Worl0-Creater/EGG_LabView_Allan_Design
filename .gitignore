@@ -52,3 +52,18 @@ ignored_data/
 large_data/
 raw_data/
 result_cache/
+
+# =========================
+# Generated data / large files
+# =========================
+*.csv
+*.zip
+*.lnk
+*.mat
+
+下位机模拟输出/
+Allan_Matlab/tdc_chain_sim_output/
+Allan_Matlab/allan_verify_output/
+Allan_Matlab/ocxo_sim_time_error.csv
+Allan_Matlab/ocxo_sim_time_error_tdc_measured.csv
+Allan_Matlab/fpga_ocxo_timestamp.csv
